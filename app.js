@@ -30,6 +30,9 @@ var store = new MongoDBStore({
   collection: 'Sessions'
 });
 
+const exceljeeEmail="exceljee42@gmail.com";
+const exceljeePass="Vidushi42";
+
 // Catch errors
 store.on('error', function(error) {
   console.log(error);
@@ -84,8 +87,8 @@ app.post('/verifyOtp', async (req, res) => {
     _id: 1,
     first_name: 1
   });
-  console.log(ccc.first_name);
-  if (ccc.first_name != null) {
+  console.log(ccc);
+  if (ccc!= null) {
     console.log("Email Exist");
     res.render(__dirname + "/html/regform.ejs", {
       message: 1
@@ -95,12 +98,12 @@ app.post('/verifyOtp', async (req, res) => {
     var transport = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'exceljee.app@gmail.com',
-        pass: 'Mernproject@1'
+        user: exceljeeEmail,
+        pass: exceljeePass
       }
     });
     var mailOptions = {
-      from: 'exceljee.app@gmail.com',
+      from: '"Team ExcelJEE"exceljee42@gmail.com',
       to: req.body.email,
       subject: 'Otp for verification',
       text: "OTP for verify email is \n " + req.body.otp + "\nDon't share with anyone"
@@ -302,13 +305,13 @@ app.post("/validateEmailForgotPass", async (req, res) => {
     var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'exceljee.app@gmail.com',
-        pass: 'Mernproject@1'
+        user: exceljeeEmail,
+        pass: exceljeePass
       }
     });
 
     var mailOptions = {
-      from: 'exceljee.app@gmail.com',
+      from: ' "Team ExcelJEE" exceljee42@gmail.com',
       to: req.body.fg_email,
       subject: 'OTP for forget password',
       text: "OTP for password change is \n " + otp + "\nDon't share with anyone"
@@ -349,8 +352,10 @@ app.post("/change-pass", async (req, res) => {
     $set: {
       password: req.body.password
     }
+  }); 
+  res.render(__dirname + "/html/login.ejs", {
+    error: ""
   });
-  res.sendFile(__dirname + "/html/login.html");
 });
 
 
@@ -652,12 +657,12 @@ app.get("/notify", async (req, res) => {
   var transports = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'exceljee.app@gmail.com',
-      pass: 'Mernproject@1'
+      user: exceljeeEmail,
+      pass: exceljeePass
     }
   });
   var mailOptions = {
-    from: 'exceljee.app@gmail.com',
+    from: '"Team ExcelJEE"exceljee.app@gmail.com',
     to: zzy.email,
     subject: 'Successfully Registered',
     text: "You registration to ExcelJee has been sucessfully done\nYou can login to your account from website by your email and\nPassword : " + zzy.password
