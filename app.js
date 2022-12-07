@@ -38,6 +38,8 @@ store.on('error', function(error) {
   console.log(error);
 });
 
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
