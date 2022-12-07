@@ -1,7 +1,7 @@
 {
-  "name": "form",
+  "name": "exceljee",
   "version": "1.0.0",
-  "description": "",
+  "description": "App runs on Heroku Server Environment : https://exceljee-app.herokuapp.com",
   "main": "app.js",
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -35,5 +35,6 @@
   "bugs": {
     "url": "https://github.com/exceljee/repos_app/issues"
   },
-  "homepage": "https://github.com/exceljee/repos_app#readme"
+  "homepage": "https://github.com/exceljee/repos_app#readme",
+  "devDependencies": {}
 }
