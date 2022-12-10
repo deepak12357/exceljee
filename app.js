@@ -26,12 +26,12 @@ const open = require('open');
 
 const app = express();
 var store = new MongoDBStore({
-  uri: 'mongodb+srv://admin-exceljee:topatopa@cluster0.wfgot.mongodb.net/db1?retryWrites=true&w=majority',
+  uri: "mongodb+srv://deepak:deepak@cluster0.hf3tn5i.mongodb.net/db1?retryWrites=true&w=majority",
   collection: 'Sessions'
 });
 
 const exceljeeEmail="exceljee42@gmail.com";
-const exceljeePass="Vidushi42";
+const exceljeePass="sxqxgideshmqwrsw";
 
 // Catch errors
 store.on('error', function(error) {
@@ -61,6 +61,7 @@ app.use(
 app.use(express.static(path.join(__dirname, '/public')));
 
 var site = "60b8f50a12a89dc51e2b755f"
+
 app.get("/", async (req, res) => {
   initiateMongoServer();
   const aaa = await visitModel.updateOne({
@@ -195,7 +196,7 @@ app.post("/submit-form", upload.single('picfile'), async (req, res, next) => {
 app.get("/login", function(req, res) {
   res.render(__dirname + "/html/login.ejs", {
     error: ""
-  });
+  }); 
 });
 
 app.post("/alogin", async (req, res) => {
@@ -207,7 +208,7 @@ app.post("/alogin", async (req, res) => {
 
       var asd = await visitModel.findOne({
         _id: site
-      })
+      }).clone();
       await detailModel.find({}, (err, items) => {
         if (err) {
           console.log(err);
@@ -217,20 +218,23 @@ app.post("/alogin", async (req, res) => {
             newuser: items
           });
         }
-      });
+      }).clone();
     } else {
       res.render(__dirname + "/html/login.ejs", {
         error: "Wrong EmailId or Password"
       });
+
       console.log("Wrong EmailId or Password");
     }
-  } else if (req.body.role == "teacher") {
+  } 
+  
+  else if (req.body.role == "teacher") {
     const td = await teacherModel.findOne({
       password: req.body.password,
       email: req.body.email
     }, {
       _id: 1
-    });
+    }).clone();
     if (td != null) {
       req.session.email = req.body.email;
       teacherModel.findOne({
@@ -243,20 +247,22 @@ app.post("/alogin", async (req, res) => {
             items: items
           });
         }
-      });
+      }).clone();;
     } else {
       res.render(__dirname + "/html/login.ejs", {
         error: "Wrong EmailId or Password"
       });
       console.log("Wrong EmailId or Password");
     }
-  } else if (req.body.role == "student") {
+  } 
+  
+  else if (req.body.role == "student") {
     const ddd = await detailModel.findOne({
       password: req.body.password,
       email: req.body.email
     }, {
       _id: 1
-    });
+    }).clone();
     if (ddd != null) {
       req.session.email = req.body.email;
       detailModel.findOne({
@@ -269,7 +275,7 @@ app.post("/alogin", async (req, res) => {
             items: items
           });
         }
-      });
+      }).clone();
     } else {
       res.render(__dirname + "/html/login.ejs", {
         error: "Wrong EmailId or Password"
@@ -302,7 +308,7 @@ app.post("/validateEmailForgotPass", async (req, res) => {
     email: req.body.fg_email,
   }, {
     _id: 1
-  });
+  }).clone();
   if (dd2 != null) {
     var transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -354,7 +360,7 @@ app.post("/change-pass", async (req, res) => {
     $set: {
       password: req.body.password
     }
-  }); 
+  }).clone(); 
   res.render(__dirname + "/html/login.ejs", {
     error: ""
   });
@@ -368,7 +374,7 @@ app.post("/change-pass", async (req, res) => {
 app.get("/newuser", async (req, res) => {
   initiateMongoServer();
   if (req.session.email) {
-    var acd = await models.scBatch.find();
+    var acd = await models.scBatch.find().clone();
     await detailModel.findOne({
       _id: req.query.index
     }, (err, items) => {
@@ -382,7 +388,7 @@ app.get("/newuser", async (req, res) => {
           itemss: acd
         });
       }
-    });
+    }).clone();
   }
 });
 
@@ -399,7 +405,7 @@ app.get("/profile", function(req, res) {
     fs.writeFileSync(filepath, arr);
     file = path.join(__dirname + "/download/" + filename);
     res.download(file);
-  });
+  }).clone();
 });
 
 function convert(str) {
@@ -449,7 +455,7 @@ app.post("/newstudentcourse", async (req, res) => {
         link: link,
         batch: req.body.batch
       }
-    });
+    }).clone();
     console.log(req.body.batch);
     await models.scDoubt.updateOne({
       batchId: req.body.batch
@@ -457,7 +463,7 @@ app.post("/newstudentcourse", async (req, res) => {
       $inc: {
         studentCount: 1
       }
-    });
+    }).clone();
     var due = 1;
     var amount = 0;
     if (req.body.course == 1) {
@@ -479,7 +485,7 @@ app.post("/newstudentcourse", async (req, res) => {
     var y = req.body.plan + " Installment"
     var gfh = await detailModel.findOne({
       email: req.body.email
-    });
+    }).clone();
     var names = gfh.first_name + " " + gfh.last_name;
     await feeModel.create({
       name: names,
@@ -490,15 +496,15 @@ app.post("/newstudentcourse", async (req, res) => {
       fInstallment: convert(current),
       amountPaid: amount,
       noDue: due
-    });
+    })
     await visitModel.updateOne({
       _id: site
     }, {
       $inc: {
         sales: amount
       }
-    })
-    var acd = await models.scBatch.find();
+    }).clone()
+    var acd = await models.scBatch.find().clone();
     await detailModel.findOne({
       email: req.body.email
     }, (err, items) => {
@@ -512,7 +518,7 @@ app.post("/newstudentcourse", async (req, res) => {
           itemss: acd
         });
       }
-    });
+    }).clone();
   }
 });
 
@@ -546,7 +552,7 @@ app.get("/fees", async (req, res) => {
         items: items,
       });
     }
-  });
+  }).clone();
 });
 
 app.get("/notifyforfees", async (req, res) => {
@@ -557,7 +563,7 @@ app.get("/notifyforfees", async (req, res) => {
     $set: {
       notify: "Fees Due"
     }
-  });
+  }).clone();
   await feeModel.find({}, (err, items) => {
     if (err) {
       console.log(err);
@@ -567,7 +573,7 @@ app.get("/notifyforfees", async (req, res) => {
         items: items,
       });
     }
-  });
+  }).clone();
 });
 
 app.get("/paidfees", async (req, res) => {
@@ -576,14 +582,14 @@ app.get("/paidfees", async (req, res) => {
   var current = new Date();
   var azd = await feeModel.findOne({
     rollno: req.query.i
-  });
+  }).clone();
   await detailModel.updateOne({
     roll_no: req.query.i
   }, {
     $set: {
       notify: ""
     }
-  });
+  }).clone();
   if (azd.course == "1 Yr Course") {
     tamount = 25000;
     await feeModel.updateOne({
@@ -596,7 +602,7 @@ app.get("/paidfees", async (req, res) => {
       $set: {
         sInstallment: convert(current),
       }
-    });
+    }).clone();
   } else {
     tamount = 30000;
     if (azd.noDue == 1) {
@@ -610,7 +616,7 @@ app.get("/paidfees", async (req, res) => {
         $set: {
           sInstallment: convert(current),
         }
-      });
+      }).clone();
     }
     if (azd.noDue == 2) {
       await feeModel.updateOne({
@@ -623,7 +629,7 @@ app.get("/paidfees", async (req, res) => {
         $set: {
           tInstallment: convert(current),
         }
-      });
+      }).clone();
     }
   }
 
@@ -635,7 +641,7 @@ app.get("/paidfees", async (req, res) => {
         items: items,
       });
     }
-  });
+  }).clone();
 
   await visitModel.updateOne({
     _id: site
@@ -643,7 +649,7 @@ app.get("/paidfees", async (req, res) => {
     $inc: {
       sales: tamount
     }
-  })
+  }).clone()
 });
 
 app.get("/notify", async (req, res) => {
@@ -654,7 +660,7 @@ app.get("/notify", async (req, res) => {
     _id: 0,
     email: 1,
     password: 1
-  });
+  }).clone();
   console.log(zzy.email);
   var transports = nodemailer.createTransport({
     service: 'gmail',
@@ -676,7 +682,7 @@ app.get("/notify", async (req, res) => {
       console.log('Email sent: ' + info.response);
     }
   });
-  var acd = await models.scBatch.find();
+  var acd = await models.scBatch.find().clone();
   await detailModel.findOne({
     _id: req.query.index
   }, (err, items) => {
@@ -691,7 +697,7 @@ app.get("/notify", async (req, res) => {
         itemss: acd
       });
     }
-  });
+  }).clone();
 });
 
 app.get("/uploadfile", async (req, res) => {
@@ -727,7 +733,7 @@ app.post('/upload', upload.single('file'), (req, res, next) => {
       });
       res.sendFile(__dirname + "/html/upload.html");
     }
-  });
+  }).clone();
 });
 
 app.get("/showfile", async (req, res) => {
@@ -742,7 +748,7 @@ app.get("/showfile", async (req, res) => {
           items: items
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -754,7 +760,7 @@ app.post("/delfile", async (req, res) => {
   initiateMongoServer();
   await studyModel.deleteOne({
     topic: req.body.filename
-  });
+  }).clone();
   studyModel.find({}, (err, items) => {
     if (err) {
       console.log(err);
@@ -763,7 +769,7 @@ app.post("/delfile", async (req, res) => {
         items: items
       });
     }
-  });
+  }).clone();
 });
 
 
@@ -789,7 +795,7 @@ function timetableupdate(topic, desc, date, start_time, duration, zoom_id,batch)
     end_hour: end_hr,
     end_min: end_min,
     zoom_id: zoom_id
-  });
+  }).clone();
   console.log("timetable updated");
 }
 
@@ -845,7 +851,7 @@ app.post("/createmeeting", async (req, res) => {
           duration: response.duration,
           host_url: response.start_url,
           user_url: response.join_url
-        });
+        }).clone();
         console.log("Meeting Created");
         console.log(req.body.batch);
         
@@ -876,7 +882,7 @@ app.get('/show-feedbacks', async (req, res) => {
           items: items
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -892,14 +898,14 @@ app.get('/manage-batch', async (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        var wwx = await models.scTBatch.find();
+        var wwx = await models.scTBatch.find().clone();
         res.render(__dirname + '/html/manage-batch.ejs', {
           items: items,
           itemss: wwx,
           message: ""
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -918,7 +924,7 @@ app.post("/editbatch", async (req, res) => {
     subject: www.subject,
     teachername: www.first_name + " " + www.last_name,
     teacherId: www.teacherId
-  });
+  }).clone();
   await models.scBatch.find({}, async (err, items) => {
     if (err) {
       console.log(err);
@@ -930,7 +936,7 @@ app.post("/editbatch", async (req, res) => {
         message: "Batch " + req.body.bid + " Updated"
       });
     }
-  });
+  }).clone();
 });
 
 app.post('/createbatch', async (req, res) => {
@@ -939,7 +945,7 @@ app.post('/createbatch', async (req, res) => {
     await models.scBatch.create({
       batchId: req.body.bid,
       studentCount: 0
-    });
+    }).clone();
     await models.scBatch.find({}, async (err, items) => {
       if (err) {
         console.log(err);
@@ -951,7 +957,7 @@ app.post('/createbatch', async (req, res) => {
           message: ""
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -964,7 +970,7 @@ app.get('/deletebatch', async (req, res) => {
   if (req.session.email) {
     await models.scBatch.deleteOne({
       batchId: req.query.i
-    })
+    }).clone()
     await models.scBatch.find({}, async (err, items) => {
       if (err) {
         console.log(err);
@@ -976,7 +982,7 @@ app.get('/deletebatch', async (req, res) => {
           message: ""
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -990,19 +996,19 @@ app.get('/removeteacher', async (req, res) => {
     await models.scTBatch.deleteOne({
       batchId: req.query.j,
       teacherId: req.query.i
-    })
+    }).clone()
     await models.scBatch.find({}, async (err, items) => {
       if (err) {
         console.log(err);
       } else {
-        var wwx = await models.scTBatch.find();
+        var wwx = await models.scTBatch.find().clone();
         res.render(__dirname + '/html/manage-batch.ejs', {
           items: items,
           itemss: wwx,
           message: ""
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -1022,7 +1028,7 @@ app.get('/seett-admin', async (req, res) => {
           items: items
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -1035,7 +1041,7 @@ app.get('/ttDelete', async (req, res) => {
   if (req.session.email) {
     await models.scTimetable.deleteOne({
       _id: req.query.index
-    });
+    }).clone();
     console.log("TimeTable Updated (Value Deleted)");
     await models.scTimetable.find({}, (err, items) => {
       if (err) {
@@ -1045,7 +1051,7 @@ app.get('/ttDelete', async (req, res) => {
           items: items
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -1070,7 +1076,7 @@ app.get("/user", async (req, res) => {
               items: items
             });
           }
-        });
+        }).clone();
       }
       if (req.query.a == "teacher") {
         await teacherModel.find({}, (err, data) => {
@@ -1081,7 +1087,7 @@ app.get("/user", async (req, res) => {
               data: data
             });
           }
-        });
+        }).clone();
       }
     }
   }
@@ -1112,7 +1118,7 @@ app.get('/search', (req, res) => {
           data: data
         });
       }
-    })
+    }).clone()
   } catch (error) {
     console.log(error);
   }
@@ -1138,7 +1144,7 @@ app.get('/usearch', (req, res) => {
           items: items
         });
       }
-    })
+    }).clone()
   } catch (error) {
     console.log(error);
   }
@@ -1159,7 +1165,7 @@ app.get("/editprof", function(req, res) {
           items: items
         });
       }
-    });
+    }).clone();
   } catch (error) {
     console.log(error);
   }
@@ -1188,7 +1194,7 @@ app.post("/editprof", async (req, res) => {
         phone: req.body.phn,
         city: req.body.city
       }
-    });
+    }).clone();
     console.log("1 Document updated...");
     await detailModel.findOne({
       email: req.session.email
@@ -1200,7 +1206,7 @@ app.post("/editprof", async (req, res) => {
           items: items
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login first"
@@ -1228,7 +1234,7 @@ app.post("/editpassword", async (req, res) => {
       $set: {
         password: req.body.password
       }
-    });
+    }).clone();
     console.log("password changed");
     res.redirect('stuprof');
   } else {
@@ -1249,7 +1255,7 @@ app.get("/studymaterial", function(req, res) {
           items: items
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -1277,7 +1283,7 @@ app.get("/bt_click", function(req, res) {
     fs.writeFileSync(filepath, arr);
     file = path.join(__dirname + "/download/" + filename);
     res.download(file);
-  });
+  }).clone();
 });
 
 /////    Show Time Table    /////
@@ -1286,7 +1292,7 @@ app.get('/seett', async (req, res) => {
   if (req.session.email) {
     var dmr=await detailModel.findOne({
       email: req.session.email
-    });
+    }).clone();
     var current = new Date();
     var tt = await models.scTimetable.find({
       $and: [{
@@ -1314,7 +1320,7 @@ app.get('/seett', async (req, res) => {
           items: items
         });
       }
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -1330,18 +1336,18 @@ app.get("/joinmeeting", async (req, res) => {
     var actor;
     var dmr=await detailModel.findOne({
       email: req.session.email
-    });
+    }).clone();
     var current = new Date();
     if (dmr== null) {
       actor = "teacher";
       var rpg=await teacherModel.findOne({
         email: req.session.email
-      });
+      }).clone();
       var dmrs=await models.scTBatch.find({
         teacherId:rpg.teacherId
       },{
         _id:0,batchId:1
-      });
+      }).clone();
       var array=[];
       var i=0;
       for (const element of dmrs) {
@@ -1381,7 +1387,7 @@ app.get("/joinmeeting", async (req, res) => {
             actor: actor
           });
         }
-      });
+      }).clone();
 
     }
     else{
@@ -1417,7 +1423,7 @@ app.get("/joinmeeting", async (req, res) => {
             actor: actor
           });
         }
-      });
+      }).clone();
     }
 
     
@@ -1436,7 +1442,7 @@ app.get("/joinmeetingid", async (req, res) => {
     _id: 0,
     user_url: 1,
     host_url: 1
-  });
+  }).clone();
   if (req.query.actor = "student") {
     res.redirect(url.user_url);
   } else {
@@ -1451,7 +1457,7 @@ app.get("/doubtsTable", async (req, res) => {
   if (req.session.email) {
     var off = await detailModel.findOne({
       email: req.session.email
-    });
+    }).clone();
     models.scDoubt.find({
       rollno: off.roll_no
     }, (err, items) => {
@@ -1462,7 +1468,7 @@ app.get("/doubtsTable", async (req, res) => {
           items: items
         });
       }
-    });
+    }).clone();
   }
 
 });
@@ -1477,7 +1483,7 @@ app.post("/askdoubt", upload.single('image'), async (req, res, next) => {
     _id: 0,
     roll_no: 1,
     batch: 1
-  });
+  }).clone();
   if (!req.file) {
     obj = {
       subject: req.body.subject,
@@ -1513,21 +1519,21 @@ app.post("/askdoubt", upload.single('image'), async (req, res, next) => {
         });
       }
     }
-  });
+  }).clone();
 });
 
 app.get("/showans", async (req, res) => {
   initiateMongoServer();
   var items = await models.scDoubt.findOne({
     code: req.query.i
-  });
+  }).clone();
   var itemss = await models.scAnswer.findOne({
     code: req.query.i
-  });
+  }).clone();
   await res.render(__dirname + "/html/showanswer.ejs", {
     items: items,
     itemss: itemss
-  })
+  }).clone()
 });
 
 /////       Feedback Student       /////
@@ -1537,7 +1543,7 @@ app.post("/feedback-update", (req, res) => {
     models.scFeedback.create({
       subject: req.body.subject,
       comment: req.body.comment
-    });
+    }).clone();
   } else {
     res.render(__dirname + "/html/login.ejs", {
       error: "Login First"
@@ -1556,7 +1562,7 @@ app.post("/teacher-form", upload.single('pic'), async (req, res, next) => {
   }, {
     _id: 0,
     first_name: 1
-  });
+  }).clone();
   if (tc != null) {
     if (res) {
       var current = new Date();
@@ -1570,7 +1576,7 @@ app.post("/teacher-form", upload.single('pic'), async (req, res, next) => {
       }, {
         _id: 0,
         employee: 1
-      });
+      }).clone();
       var tid = course * 10000 + year * 100 + zzz.employee + 1;
       console.log(tid);
       var obj = {
@@ -1604,7 +1610,7 @@ app.post("/teacher-form", upload.single('pic'), async (req, res, next) => {
         });
         res.sendFile(__dirname + "/html/index.html");
       }
-    });
+    }).clone();
   } else {
     console.log("Email already exists." + req.body.email);
     console.log(tc);
@@ -1621,7 +1627,7 @@ app.post("/tpwdchng", async (req, res) => {
     $set: {
       password: req.body.password
     }
-  });
+  }).clone();
   res.sendFile(__dirname + "/html/login.html");
 });
 
@@ -1634,7 +1640,7 @@ app.get("/tUnanswered", async (req, res) => {
     teacherId:dfd.teacherId
   },{
     _id:0,batchId:1
-  });
+  }).clone();
   var array=[];
       var i=0;
       for (const element of ded) {
@@ -1655,7 +1661,7 @@ app.get("/tUnanswered", async (req, res) => {
         items: items
       });
     }
-  });
+  }).clone();
 });
 
 app.get("/answerdoubt", async (req, res) => {
@@ -1663,7 +1669,7 @@ app.get("/answerdoubt", async (req, res) => {
   var itemss = "";
   var items = await models.scDoubt.findOne({
     _id: req.query.i
-  });
+  }).clone();
   if (items.status == 3) {
     itemss = await models.scAnswer.findOne({
       code: items.code
@@ -1672,7 +1678,7 @@ app.get("/answerdoubt", async (req, res) => {
   await res.render(__dirname + '/html/ansdoubtpage.ejs', {
     items: items,
     itemss: itemss
-  });
+  }).clone();
 });
 
 app.post("/answer", upload.single('aImage'), async (req, res, next) => {
@@ -1698,7 +1704,7 @@ app.post("/answer", upload.single('aImage'), async (req, res, next) => {
         code: code,
         status: 3
       }
-    });
+    }).clone();
 
   } else {
     console.log("file is selected");
@@ -1716,7 +1722,7 @@ app.post("/answer", upload.single('aImage'), async (req, res, next) => {
         status: 3,
         code: code
       }
-    });
+    }).clone();
   }
   models.scAnswer.create(obj, async (err, item) => {
     if (err) {
@@ -1730,7 +1736,7 @@ app.post("/answer", upload.single('aImage'), async (req, res, next) => {
         });
       }
     }
-  });
+  }).clone();
 });
 
 app.post("/editanswer", upload.single('aImage'), async (req, res, next) => {
@@ -1749,7 +1755,7 @@ app.post("/editanswer", upload.single('aImage'), async (req, res, next) => {
       $set: {
         status: 3
       }
-    });
+    }).clone();
   } else {
     console.log("file is selected");
     obj = {
@@ -1764,7 +1770,7 @@ app.post("/editanswer", upload.single('aImage'), async (req, res, next) => {
       $set: {
         status: 3,
       }
-    });
+    }).clone();
   }
   models.scAnswer.updateOne({
     _id: req.body.id
@@ -1780,7 +1786,7 @@ app.post("/editanswer", upload.single('aImage'), async (req, res, next) => {
         });
       }
     }
-  });
+  }).clone();
 });
 
 app.post("/ansbycode", async (req, res) => {
@@ -1795,7 +1801,7 @@ app.post("/ansbycode", async (req, res) => {
       code: req.body.code,
       status: 3
     }
-  });
+  }).clone();
 });
 
 app.get("/downloadquesimage", async (req, res) => {
@@ -1811,7 +1817,7 @@ app.get("/downloadquesimage", async (req, res) => {
     fs.writeFileSync(filepath, arr);
     file = path.join(__dirname + "/download/" + filename);
     res.download(file);
-  });
+  }).clone();
 });
 
 app.get("/downloadansimage", async (req, res) => {
@@ -1827,7 +1833,7 @@ app.get("/downloadansimage", async (req, res) => {
     fs.writeFileSync(filepath, arr);
     file = path.join(__dirname + "/download/" + filename);
     res.download(file);
-  });
+  }).clone();
 });
 
 app.get("/logout", function(req, res) {
